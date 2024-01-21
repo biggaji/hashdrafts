@@ -1,0 +1,11 @@
+{
+  "name": "hashdrafts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:biggaji/hashdrafts.git",
+  "author": "biggaji <tobiajibade2017@yandex.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
