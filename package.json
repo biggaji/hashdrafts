@@ -6,6 +6,10 @@
   "author": "biggaji <tobiajibade2017@yandex.com>",
   "license": "MIT",
   "devDependencies": {
+    "nodemon": "^3.0.3",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "openai": "^4.25.0"
   }
 }
