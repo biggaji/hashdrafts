@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+// import OpenAI from 'openai';
 import fs from 'node:fs';
 import path from 'node:path';
 import express, { NextFunction, Request, Response } from 'express';
@@ -6,11 +6,12 @@ import { engine } from 'express-handlebars';
 import { config } from 'dotenv';
 import multer from 'multer';
 import { promisify } from 'node:util';
+import { runChatCompletion } from './utils/openai.js';
 
 // Load environment variables
 config();
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -38,7 +39,8 @@ app.post(
       const content = req.file.buffer.toString();
       const mimeType = req.file.mimetype;
       // console.log(content);
-      res.status(200).json({ content, mimeType });
+      const aiResp = await runChatCompletion(content, 'marketing');
+      res.status(200).json({ content, mimeType, aiResp });
     } catch (error) {
       next(error);
     }
