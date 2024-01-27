@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import OpenAI from 'openai';
 
-// Load env
+// Load environment variables
 config();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -14,7 +14,7 @@ async function runChatCompletion(input: string, articleType: ArticleType) {
       messages: [
         {
           content: `Generate a ${articleType} article draft from this: ${input} and also provide good a suggestions
-           within the drafts on how best to improve the article, this suggestion should be in comments, and the reponse should be in markdown format`,
+            within the draft content on how best to improve the article, this suggestion should be in comments within the draft content, and the response should be in a markdown format`,
           role: 'assistant',
         },
       ],
