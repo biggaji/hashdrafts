@@ -13,8 +13,8 @@ async function runChatCompletion(input: string, articleType: ArticleType) {
     const completion = await openai.chat.completions.create({
       messages: [
         {
-          content: `Generate a ${articleType} article draft from this: ${input} and also provide good a suggestions
-            within the draft content on how best to improve the article, this suggestion should be in comments within the draft content, and the response should be in a markdown format`,
+          content: `Generate a ${articleType} blog article draft from this input: ${input} and also provide good a suggestions
+            within the draft content on how best to improve the article, this suggestion should be in comments within the draft content, and the response should be in a well fomatted markdown format, remove any non markdown characters from the content before returning it`,
           role: 'assistant',
         },
       ],

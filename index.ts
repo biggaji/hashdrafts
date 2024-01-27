@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import { engine } from 'express-handlebars';
 import { config } from 'dotenv';
 import multer from 'multer';
+import markdownIt from 'markdown-it';
 import { runChatCompletion } from './utils/openai.js';
 
 // Load environment variables
@@ -13,6 +14,11 @@ config();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+const md = markdownIt({
+  breaks: true,
+  html: false,
+});
 
 const multerUploader = multer({
   limits: {
@@ -35,9 +41,8 @@ app.post(
 
       const content = req.file.buffer.toString();
       const mimeType = req.file.mimetype;
-      // console.log(content);
-      const aiResp = await runChatCompletion(content, 'marketing');
-      res.status(200).json({ content, mimeType });
+      const aiResp = await runChatCompletion(content, 'how_to');
+      res.status(200).send(aiResp);
     } catch (error) {
       next(error);
     }
