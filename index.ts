@@ -6,9 +6,11 @@ import multer from 'multer';
 import markdownIt from 'markdown-it';
 import { generateBlogDraft } from './utils/generateBlogDraft.js';
 import morgan from 'morgan';
+import { hashNodeAPIClient } from './utils/hashNodeAPIClient.js';
 
 import { fileURLToPath } from 'node:url';
 import { pageUrlPrefix } from './constants/constants.js';
+import { gql } from 'graphql-request';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,6 +76,29 @@ app.post('/draft', multerUploader.single('file'), async (req: Request, res: Resp
     const draft = await generateBlogDraft(fileContent, articleType);
 
     res.status(200).send(draft);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/publish', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {} = req.body;
+    const user = req.user;
+
+    const publishDraftPayload = gql``;
+
+    await hashNodeAPIClient()
+      .request(publishDraftPayload)
+      .then((result) => {})
+      .catch((e) => {
+        throw e;
+      });
+
+    res.status(200).json({
+      message: 'Article published to Hashnode',
+      success: true,
+    });
   } catch (error) {
     next(error);
   }
