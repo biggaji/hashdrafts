@@ -1,12 +1,11 @@
-// import OpenAI from 'openai';
-import fs from 'node:fs';
 import path from 'node:path';
 import express, { NextFunction, Request, Response } from 'express';
 import { engine } from 'express-handlebars';
 import { config } from 'dotenv';
 import multer from 'multer';
 import markdownIt from 'markdown-it';
-import { runChatCompletion } from './utils/openai.js';
+import { generateBlogDraft } from './utils/generateBlogDraft.js';
+import morgan from 'morgan';
 
 import { fileURLToPath } from 'node:url';
 import { pageUrlPrefix } from './constants/constants.js';
@@ -20,6 +19,7 @@ config();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(morgan('dev'));
 
 const md = markdownIt({
   breaks: true,
@@ -49,28 +49,35 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.post(
-  '/drafts',
-  multerUploader.single('file'),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      if (!req.file) {
-        throw new Error('Please choose a file to upload');
-      }
-
-      if (req.file.mimetype !== 'text/markdown') {
-        throw new Error('Only upload a markdown file');
-      }
-
-      const content = req.file.buffer.toString();
-      const mimeType = req.file.mimetype;
-      const aiResp = await runChatCompletion(content, 'how_to');
-      res.status(200).send(aiResp);
-    } catch (error) {
-      next(error);
+// Extract the article type to be generated from the request body
+app.post('/draft', multerUploader.single('file'), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const uploadedFile = req.file;
+    const { articleType } = req.body;
+    if (!uploadedFile) {
+      throw new Error('Please choose a text file to upload');
     }
-  },
-);
+
+    // TODO: Only accept certain text file e.g (markdown, txt, docx e.t.c)
+    const fileMimeType = uploadedFile.mimetype;
+    // console.log(fileMimeType);
+
+    // if (fileMimeType !== 'text/markdown') {
+    //   throw new Error('Only upload a markdown file');
+    // }
+
+    if (!uploadedFile.buffer.length) {
+      throw new Error('Please upload a text file that is not empty');
+    }
+
+    const fileContent = uploadedFile.buffer.toString();
+    const draft = await generateBlogDraft(fileContent, articleType);
+
+    res.status(200).send(draft);
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log(error);
