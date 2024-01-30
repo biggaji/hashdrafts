@@ -1,6 +1,16 @@
 <h1>Hashdrafts</h1>
 <p>Generate drafts with suggestions on how to improve it content and publish to Hashnode</p>
-<textarea name='markdown-editor' id='markdown-editor' cols='30' rows='10'></textarea>
+<form action='/publish' method='post'>
+  <textarea name='markdownEditor' id='markdown-editor' cols='30' rows='10'></textarea>
+  <div>
+    <button type='submit' id='publish-cta'><span id='logo-span'><img
+          src='../../assets/brand-icon-white.png'
+          width='20'
+          height='20'
+          alt='Hashnode brand icon'
+        /></span>Publish</button>
+  </div>
+</form>
 
 <script>
   'use strict'; const simpleMDEditor = new SimpleMDE(); simpleMDEditor.value({{{draft}}});

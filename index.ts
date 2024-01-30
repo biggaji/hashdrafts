@@ -140,17 +140,19 @@ app.post('/draft', multerUploader.single('file'), async (req: Request, res: Resp
 
 app.post('/publish', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {} = req.body;
+    const { markdownEditor } = req.body;
     const user = req.user;
 
     const publishDraftPayload = gql``;
 
-    await hashNodeAPIClient()
-      .request(publishDraftPayload)
-      .then((result) => {})
-      .catch((e) => {
-        throw e;
-      });
+    // await hashNodeAPIClient()
+    //   .request(publishDraftPayload)
+    //   .then((result) => {})
+    //   .catch((e) => {
+    //     throw e;
+    //   });
+
+    console.log(markdownEditor);
 
     res.status(200).json({
       message: 'Article published to Hashnode',
