@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { hashnodeAPIUrl } from '../constants/constants';
+import { hashnodeAPIUrl } from '../constants/constants.js';
 
 export const hashNodeAPIClient = (personalAccessToken?: string) => {
   return new GraphQLClient(hashnodeAPIUrl, {

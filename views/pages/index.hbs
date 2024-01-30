@@ -1,2 +1,7 @@
 <h1>Hashdrafts</h1>
 <p>Generate drafts with suggestions on how to improve it content and publish to Hashnode</p>
+<textarea name='markdown-editor' id='markdown-editor' cols='30' rows='10'></textarea>
+
+<script>
+  'use strict'; const simpleMDEditor = new SimpleMDE(); simpleMDEditor.value({{{draft}}});
+</script>
