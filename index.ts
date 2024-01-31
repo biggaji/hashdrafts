@@ -11,6 +11,7 @@ import { hashNodeAPIClient } from './utils/hashNodeAPIClient.js';
 import { fileURLToPath } from 'node:url';
 import { pageUrlPrefix } from './constants/constants.js';
 import { gql } from 'graphql-request';
+import { authRouter } from './routers/auth.router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -199,6 +200,8 @@ app.post('/publish', async (req: Request, res: Response, next: NextFunction) => 
     next(error);
   }
 });
+
+app.use('/auth', authRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log('General error middleware', error);
