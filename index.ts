@@ -140,21 +140,58 @@ app.post('/draft', multerUploader.single('file'), async (req: Request, res: Resp
 
 app.post('/publish', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { markdownEditor } = req.body;
+    const { draftContent, postTitle } = req.body;
     const user = req.user;
 
-    const publishDraftPayload = gql``;
+    // TODO:
+    // Provide title input, tags input, store user publication host, so they select as dropdown when publishing
 
-    // await hashNodeAPIClient()
-    //   .request(publishDraftPayload)
-    //   .then((result) => {})
-    //   .catch((e) => {
-    //     throw e;
-    //   });
+    const publishDraftToHashnodePayload = gql`
+      mutation publishDraftToHashnode(
+        $postTitle: String!
+        $draftContent: String!
+        $publicationId: ObjectId!
+        $tags: [PublishPostTagInput!]!
+      ) {
+        publishPost(
+          input: {
+            title: $postTitle
+            contentMarkdown: $draftContent
+            publicationId: $publicationId
+            tags: $tags
+          }
+        ) {
+          post {
+            id
+          }
+        }
+      }
+    `;
 
-    console.log(markdownEditor);
+    const requestVariables = {
+      postTitle,
+      draftContent,
+      publicationId: process.env.PUBLICATION_ID,
+      tags: [
+        { name: 'test', slug: 'test' },
+        { name: 'hackathon', slug: 'hackathon' },
+      ],
+    };
 
-    res.status(200).json({
+    await hashNodeAPIClient(process.env.HASHNODE_PAT)
+      .request(publishDraftToHashnodePayload, requestVariables)
+      .then((result: any) => {
+        console.log(result); // { publishPost: { post: { id: '65ba359389349caf7dde3a4c' } } }
+        if (!result && !result.publishPost.post.id) {
+          throw new Error('Failed to publish post because an unexpected error occured');
+        }
+      })
+      .catch((e) => {
+        console.log('Error publishing post to hashnode:', e);
+        throw e;
+      });
+
+    res.json({
       message: 'Article published to Hashnode',
       success: true,
     });
@@ -164,7 +201,7 @@ app.post('/publish', async (req: Request, res: Response, next: NextFunction) => 
 });
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log(error);
+  console.log('General error middleware', error);
   const statusCode = error.code ? error.code : 500;
   const message = error.message ? error.message : 'Internal Server Error';
   return res.status(statusCode).json({ message });

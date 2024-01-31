@@ -1,7 +1,10 @@
 <h1>Hashdrafts</h1>
 <p>Generate drafts with suggestions on how to improve it content and publish to Hashnode</p>
 <form action='/publish' method='post'>
-  <textarea name='markdownEditor' id='markdown-editor' cols='30' rows='10'></textarea>
+  <div>
+    <input type='text' name='postTitle' placeholder='Write title here' required='true' />
+  </div>
+  <textarea name='draftContent' id='markdown-editor' cols='30' rows='10'></textarea>
   <div>
     <button type='submit' id='publish-cta'><span id='logo-span'><img
           src='../../assets/brand-icon-white.png'
