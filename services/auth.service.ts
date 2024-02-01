@@ -72,6 +72,7 @@ export class UserService {
       const jwtUserPayload = {
         id: userRecord.id,
         email: userRecord.email,
+        firstName: userRecord.firstName,
       };
 
       const accessToken = jwt.sign(jwtUserPayload, process.env.JWT_SECRET_KEY!, {

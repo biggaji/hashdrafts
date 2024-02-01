@@ -1,7 +1,14 @@
 import { Router } from 'express';
-import { signinController, signupController } from '../controllers/auth.controller.js';
+import {
+  signinGetController,
+  signinPostController,
+  signupGetController,
+  signupPostController,
+} from '../controllers/auth.controller.js';
 
 export const authRouter = Router();
 
-authRouter.post('/signup', signupController);
-authRouter.post('/authenticate', signinController);
+authRouter.post('/signup', signupPostController);
+authRouter.post('/authenticate', signinPostController);
+authRouter.get('/signup', signupGetController);
+authRouter.get('/login', signinGetController);

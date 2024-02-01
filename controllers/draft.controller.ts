@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { DraftService } from '../services/draft.service.js';
+import { pageUrlPrefix } from '../constants/constants.js';
 
 const draftService = new DraftService();
 
@@ -43,13 +44,28 @@ export const updateDraftController = async (req: Request, res: Response, next: N
   }
 };
 
-export const publishDraftToHashnode = async (req: Request, res: Response, next: NextFunction) => {
+export const publishDraftToHashnodePostController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await draftService.publishDraftToHashnode(req.body, req.user);
     res.json({
       success: true,
       message: 'Draft published to Hashnode',
       data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createDraftGetController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.render('pages/createDraft', {
+      pageUrl: `${pageUrlPrefix}/drafts/new`,
+      pageTitle: `Hashdrafts - Create new draft`,
     });
   } catch (error) {
     next(error);

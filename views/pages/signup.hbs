@@ -1,0 +1,27 @@
+<div id='authFormContainer'>
+  <form action='/auth/signup' id='authForm' method='post'>
+    <div id='inputWrapper'>
+      <label for='fname'>Firstname</label><br />
+      <input type='text' id='fname' name='firstName' required='true' />
+    </div>
+    <div id='inputWrapper'>
+      <label for='lname'>Lastname</label><br />
+      <input type='text' id='lname' name='lastName' required='true' />
+    </div>
+    <div id='inputWrapper'>
+      <label for='email'>Email Address</label><br />
+      <input type='email' id='email' name='email' required='true' />
+    </div>
+    <div id='inputWrapper'>
+      <label for='password'>Password</label><br />
+      <input type='password' id='password' name='password' required='true' />
+    </div>
+    <div id='buttonWrapper'>
+      <button type='submit'>Create account</button>
+    </div>
+  </form>
+  <div id='authAfterFlow'>
+    <p>Already have an account?
+      <a href='/auth/login'>Login.</a></p>
+  </div>
+</div>

@@ -4,10 +4,11 @@ import { engine } from 'express-handlebars';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import { fileURLToPath } from 'node:url';
-import { pageUrlPrefix } from './constants/constants.js';
 import { authRouter } from './routers/auth.router.js';
 import { draftRouter } from './routers/draft.router.js';
-import { octokitHelper } from './utils/octokitHelper.js';
+import { githubRouter } from './routers/github.router.js';
+import { indexRouter } from './routers/indexRouter.js';
+import cookieParser from 'cookie-parser';
 
 // Load environment variables
 config();
@@ -19,6 +20,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 
@@ -26,101 +28,11 @@ app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 app.engine('hbs', engine({ extname: 'hbs' }));
 app.set('view engine', 'hbs');
 
-const draft = `# How to Use Hashdrafts to Generate and Improve Blog Article Drafts
-
-If you're a blogger or content creator, you may often find yourself struggling
-to come up with new and engaging ideas for your articles. Additionally, once you
-have an idea, it can be challenging to create a well-structured and high-quality
-draft. This is where Hashdrafts comes in. Hashdrafts is an API service tool that
-enables you to generate blog article drafts and provides clear and actionable
-suggestions on how to improve the article. In this article, we will explore how
-to use Hashdrafts to generate and improve blog article drafts.
-
-## What is Hashdrafts?
-
-Hashdrafts is an API service tool designed to assist content creators in
-generating and enhancing blog article drafts. It is a powerful tool that
-leverages AI and natural language processing to provide valuable insights and
-suggestions for refining and optimizing article drafts.
-
-### How to Generate Blog Article Drafts Using Hashdrafts
-
-1. **Sign Up and Access Hashdrafts**: To get started with Hashdrafts, you'll
-need to sign up for an account. Once you have access, you can begin using the
-platform to generate blog article drafts.
-
-2. **Enter Topic or Keywords**: Next, you can input the topic or keywords
-related to the article you want to create. This will provide Hashdrafts with the
-necessary information to generate a draft.
-
-3. **Review and Edit Draft**: Hashdrafts will then generate a draft based on the
-topic or keywords provided. You can review the draft and make any necessary
-edits to ensure it aligns with your content goals and style.
-
-4. **Actionable Suggestions**: Hashdrafts will also provide actionable
-suggestions on how to improve the article. These suggestions can range from
-enhancing the overall structure to refining specific paragraphs or sentences.
-
-5. **Publish to Hashnode**: Once you are satisfied with the draft, you can
-publish it directly to Hashnode from Hashdrafts, streamlining the content
-creation and publication process.
-
-### Tips for Improving Drafts Using Hashdrafts Suggestions
-
-- [Suggestion: Consider including examples or case studies to support your
-points and make the content more engaging.]
-- [Suggestion: Use the suggestions provided by Hashdrafts to rewrite and refine
-your article for improved clarity and coherence.]
-- [Suggestion: Incorporate relevant images or multimedia elements to enhance the
-visual appeal and comprehension of the content.]
-- [Suggestion: Utilize external references and links to provide additional
-credibility and depth to your article.]
-
-By leveraging Hashdrafts, content creators can streamline the process of
-generating and improving blog article drafts. The platform's AI-powered
-suggestions and features empower writers to enhance the quality and impact of
-their content, ultimately providing value to their audience. Try out Hashdrafts
-today to elevate your content creation process!`;
-
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.render('pages/index', {
-      pageTitle: 'Hashdrafts - Generate article drafts for Hashnode',
-      pageUrl: pageUrlPrefix,
-      draft: JSON.stringify(draft),
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
+// Routers
+app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/draft', draftRouter);
-app.get('/github/authorize', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.redirect('/');
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.get('/dashboard', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    res.render('pages/dashboard', {});
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.get('/jwt/github', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await (await octokitHelper.owner(46812294)).request('GET /repos/biggaji/0xAds');
-    // console.log(result);
-    res.send(result);
-  } catch (error) {
-    next(error);
-  }
-});
+app.use('/github', githubRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log('General error middleware', error);
