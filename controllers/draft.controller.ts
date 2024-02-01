@@ -1,18 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { DraftService } from '../services/draft.service.js';
-import multer from 'multer';
-
-const multerUploader = multer({
-  limits: {
-    fileSize: 1024 * 1024 * 2000, // 2 GB (adjust the size limit as needed)
-  },
-});
 
 const draftService = new DraftService();
 
 export const createDraftController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await draftService.createDraft(req.body);
+    const result = await draftService.createDraft(req.body, req.file);
     res.json({
       success: true,
       message: 'Draft created',
@@ -43,6 +36,19 @@ export const updateDraftController = async (req: Request, res: Response, next: N
     res.json({
       success: true,
       message: 'Draft updated',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const publishDraftToHashnode = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await draftService.publishDraftToHashnode(req.body, req.user);
+    res.json({
+      success: true,
+      message: 'Draft published to Hashnode',
       data: result,
     });
   } catch (error) {
