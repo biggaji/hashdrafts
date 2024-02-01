@@ -7,12 +7,13 @@ import { fileURLToPath } from 'node:url';
 import { pageUrlPrefix } from './constants/constants.js';
 import { authRouter } from './routers/auth.router.js';
 import { draftRouter } from './routers/draft.router.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { octokitHelper } from './utils/octokitHelper.js';
 
 // Load environment variables
 config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -95,6 +96,31 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 app.use('/auth', authRouter);
 app.use('/draft', draftRouter);
+app.get('/github/authorize', (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.redirect('/');
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/dashboard', (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.render('pages/dashboard', {});
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/jwt/github', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await (await octokitHelper.owner(46812294)).request('GET /repos/biggaji/0xAds');
+    // console.log(result);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log('General error middleware', error);
