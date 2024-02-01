@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import {
   createDraftController,
-  publishDraftToHashnode,
+  createDraftGetController,
+  publishDraftToHashnodePostController,
   saveDraftController,
   updateDraftController,
 } from '../controllers/draft.controller.js';
 import multer from 'multer';
+import { localAuthGuard } from '../auth/guards/auth.guard.js';
 
 const multerUploader = multer({
   limits: {
@@ -14,8 +16,10 @@ const multerUploader = multer({
 });
 
 export const draftRouter = Router();
+draftRouter.use(localAuthGuard);
 
 draftRouter.post('/', multerUploader.single('document'), createDraftController);
 draftRouter.post('/save', saveDraftController);
 draftRouter.patch('/', updateDraftController);
-draftRouter.post('/publish', publishDraftToHashnode);
+draftRouter.post('/publish', publishDraftToHashnodePostController);
+draftRouter.get('/new', createDraftGetController);

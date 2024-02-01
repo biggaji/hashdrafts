@@ -16,9 +16,7 @@ const GithubApp = new App({
  * @method owner - The authenticated installation
  */
 export const octokitHelper = {
-  app() {
-    return GithubApp;
-  },
+  app: GithubApp,
   async owner(installationId: number) {
     try {
       if (!installationId) {

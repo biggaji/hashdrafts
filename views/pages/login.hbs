@@ -1,0 +1,22 @@
+<div id='authFormContainer'>
+  <form action='/auth/authenticate' id='authForm' method='post'>
+    <div id='inputWrapper'>
+      <label for='email'>Email Address</label><br />
+      <input type='email' id='email' name='email' required='true' />
+    </div>
+    <div id='inputWrapper'>
+      <label for='password'>Password</label><br />
+      <input type='password' id='password' name='password' required='true' />
+    </div>
+    <div id='forgetPasswordFlow'>
+      <p>Forgot password? <a href='#'>Reset it.</a></p>
+    </div>
+    <div id='buttonWrapper'>
+      <button type='submit'>Login</button>
+    </div>
+  </form>
+  <div id='authAfterFlow'>
+    <p>You don't have an account yet?
+      <a href='/auth/signup'>Create an account.</a></p>
+  </div>
+</div>

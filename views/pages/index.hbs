@@ -1,6 +1,13 @@
 <h1>Hashdrafts</h1>
 <p>Generate drafts with suggestions on how to improve it content and publish to Hashnode</p>
-<form action='/draft/publish' method='post'>
+
+<div>
+  <a href='/auth/signup'>Get started</a>
+  or
+  <a href='/auth/login'>Login</a>
+</div>
+
+{{! <form action='/draft/publish' method='post'>
   <div>
     <input type='text' name='title' placeholder='Write title here' required='true' />
   </div>
@@ -16,8 +23,8 @@
           alt='Hashnode brand icon'
         /></span>Publish</button>
   </div>
-</form>
+</form> }}
 
 <script>
-  'use strict'; const simpleMDEditor = new SimpleMDE(); simpleMDEditor.value({{{draft}}});
+  //'use strict'; const simpleMDEditor = new SimpleMDE(); simpleMDEditor.value({{{draft}}});
 </script>

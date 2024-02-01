@@ -1,4 +1,29 @@
-<div>
+<div id='dashboardContainer'>
+  <div id='sideNavContainer'>
+    <div id='navList'>
+      <ul>
+        <li>
+          <a href='/dashboard'>Overview</a>
+        </li>
+        <li>
+          <a href='/dashboard'>My drafts</a>
+        </li>
+        <li>
+          <a href='/dashboard'>Configuration</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id='mainContainer'>
+    <div id='userOnboardingFlow'>
+      <h1>Welcome {{actor}}!</h1>
+    </div>
+    <div>
+      <a href='/draft/new'>Create draft</a>
+    </div>
+    {{! <div>
   <a href='https://github.com/apps/hashdrafts-service'>Install Hashdrafts on your Github </a><span>to use it
     as a source</span>
+</div> }}
+  </div>
 </div>
