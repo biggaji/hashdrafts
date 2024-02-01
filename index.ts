@@ -2,16 +2,11 @@ import path from 'node:path';
 import express, { NextFunction, Request, Response } from 'express';
 import { engine } from 'express-handlebars';
 import { config } from 'dotenv';
-import multer from 'multer';
-import markdownIt from 'markdown-it';
-import { generateBlogDraft } from './utils/generateBlogDraft.js';
 import morgan from 'morgan';
-import { hashNodeAPIClient } from './utils/hashNodeAPIClient.js';
-
 import { fileURLToPath } from 'node:url';
 import { pageUrlPrefix } from './constants/constants.js';
-import { gql } from 'graphql-request';
 import { authRouter } from './routers/auth.router.js';
+import { draftRouter } from './routers/draft.router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,22 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 
-const md = markdownIt({
-  breaks: true,
-  html: false,
-});
-
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 
 // View engine setup
 app.engine('hbs', engine({ extname: 'hbs' }));
 app.set('view engine', 'hbs');
-
-const multerUploader = multer({
-  limits: {
-    fileSize: 1024 * 1024 * 2000, // 2 GB (adjust the size limit as needed)
-  },
-});
 
 const draft = `# How to Use Hashdrafts to Generate and Improve Blog Article Drafts
 
@@ -109,99 +93,8 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-// Extract the article type to be generated from the request body
-app.post('/draft', multerUploader.single('file'), async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const uploadedFile = req.file;
-    const { articleType } = req.body;
-    if (!uploadedFile) {
-      throw new Error('Please choose a text file to upload');
-    }
-
-    // TODO: Only accept certain text file e.g (markdown, txt, docx e.t.c)
-    const fileMimeType = uploadedFile.mimetype;
-    // console.log(fileMimeType);
-
-    // if (fileMimeType !== 'text/markdown') {
-    //   throw new Error('Only upload a markdown file');
-    // }
-
-    if (!uploadedFile.buffer.length) {
-      throw new Error('Please upload a text file that is not empty');
-    }
-
-    const fileContent = uploadedFile.buffer.toString();
-    const draft = await generateBlogDraft(fileContent, articleType);
-
-    res.status(200).send(draft);
-  } catch (error) {
-    next(error);
-  }
-});
-
-app.post('/publish', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { draftContent, postTitle } = req.body;
-    const user = req.user;
-
-    // TODO:
-    // Provide title input, tags input, store user publication host, so they select as dropdown when publishing
-
-    const publishDraftToHashnodePayload = gql`
-      mutation publishDraftToHashnode(
-        $postTitle: String!
-        $draftContent: String!
-        $publicationId: ObjectId!
-        $tags: [PublishPostTagInput!]!
-      ) {
-        publishPost(
-          input: {
-            title: $postTitle
-            contentMarkdown: $draftContent
-            publicationId: $publicationId
-            tags: $tags
-          }
-        ) {
-          post {
-            id
-          }
-        }
-      }
-    `;
-
-    const requestVariables = {
-      postTitle,
-      draftContent,
-      publicationId: process.env.PUBLICATION_ID,
-      tags: [
-        { name: 'test', slug: 'test' },
-        { name: 'hackathon', slug: 'hackathon' },
-      ],
-    };
-
-    await hashNodeAPIClient(process.env.HASHNODE_PAT)
-      .request(publishDraftToHashnodePayload, requestVariables)
-      .then((result: any) => {
-        console.log(result); // { publishPost: { post: { id: '65ba359389349caf7dde3a4c' } } }
-        if (!result && !result.publishPost.post.id) {
-          throw new Error('Failed to publish post because an unexpected error occured');
-        }
-      })
-      .catch((e) => {
-        console.log('Error publishing post to hashnode:', e);
-        throw e;
-      });
-
-    res.json({
-      message: 'Article published to Hashnode',
-      success: true,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
 app.use('/auth', authRouter);
+app.use('/draft', draftRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log('General error middleware', error);
