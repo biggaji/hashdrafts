@@ -2,6 +2,8 @@ import { Router } from 'express';
 import {
   createDraftController,
   createDraftGetController,
+  editDraftGetController,
+  myDraftsGetController,
   publishDraftToHashnodePostController,
   saveDraftController,
   updateDraftController,
@@ -19,7 +21,9 @@ export const draftRouter = Router();
 draftRouter.use(localAuthGuard);
 
 draftRouter.post('/', multerUploader.single('document'), createDraftController);
-draftRouter.post('/save', saveDraftController);
-draftRouter.patch('/', updateDraftController);
-draftRouter.post('/publish', publishDraftToHashnodePostController);
 draftRouter.get('/new', createDraftGetController);
+draftRouter.post('/save', saveDraftController);
+draftRouter.get('/all', myDraftsGetController);
+draftRouter.post('/:id', updateDraftController);
+draftRouter.get('/:id', editDraftGetController);
+draftRouter.post('/publish', publishDraftToHashnodePostController);

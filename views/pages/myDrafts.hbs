@@ -1,0 +1,18 @@
+<div>
+  {{#if drafts.length}}
+    <ul>
+      {{#each drafts}}
+        <li>
+          <a href='/draft/{{this.id}}'>{{this.id}}</a>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <div id='emptyState'>
+      <p>You haven't created any drafts yet.</p>
+      <div id='cta'>
+        <a href='/draft/new'>Create blog draft</a>
+      </div>
+    </div>
+  {{/if}}
+</div>

@@ -4,11 +4,16 @@ import { CreateDraftDto, UpdateDraftDto } from '../types/draft.js';
 export class DraftRepository {
   constructor() {}
 
-  async create(payload: CreateDraftDto) {
+  async create(payload: CreateDraftDto, userId: string) {
     try {
       return await db.draft.create({
         data: {
           ...payload,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
         },
       });
     } catch (error) {

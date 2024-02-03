@@ -1,0 +1,136 @@
+<div>
+  <h1>Connected Integrations</h1>
+  <div id='integrations'>
+     {{#if integrations.length}}
+{{#each integrations}}
+
+<div class='integrationConnectList'>
+   {{#if (eq this.type 'hashnode')}}
+   {{#if this.connected}}
+   <div class='integration'>
+      <img
+         src='../../assets/logo-standard.svg'
+         class='integrationIcon'
+         alt='Hashnode logo'
+         width='100'
+         height='40'
+         />
+      <span class='integrationStatusLight'></span>
+      <span class='integrationStatusText'>Connected</span>
+   </div>
+   {{else}}
+   <div class='integration'>
+      <img
+         src='../../assets/logo-standard.svg'
+         class='integrationIcon'
+         alt='Hashnode logo'
+         width='100'
+         height='40'
+         />
+      <span class='integrationStatusLight'></span>
+      <span class='integrationStatusText'>Not Connected</span>
+   </div>
+   {{/if}}
+   {{/if}}  
+   {{!-- GitHub --}}
+   {{#if (eq this.type 'github')}}
+   {{#if this.connected}}
+   <div class='integration'>
+      <img src='../../assets/GitHub_Logo.png' alt='GitHub logo' width='100' height='40' />
+      <span class='integrationStatusLight'></span>
+      <span class='integrationStatusText'>Connected</span>
+      {{else}}
+      <div class='integration'>
+         <img src='../../assets/GitHub_Logo.png' alt='GitHub logo' width='100' height='40' />
+         <span class='integrationStatusLight'></span>
+         <span class='integrationStatusText'>Not Connected</span>
+      </div>
+      {{/if}}
+      {{/if}}
+   </div>
+
+   {{/each}}
+   
+   {{else}}
+   <div id='emptyState'>
+      <p>You haven't configured any integration yet.</p>
+      <p>Click on the icon of the service you would like to integrate.</p>
+   </div>
+   <div class='integrationConnectList'>
+      <div class='integration'>
+         <img
+            src='../../assets/logo-standard.svg'
+            class='integrationIcon'
+            alt='Hashnode logo'
+            width='100'
+            height='40'
+            />
+         <span class='integrationStatusLight'></span>
+         <span class='integrationStatusText'>Not connected</span>
+      </div>
+      <div class='integration' >
+         <a href='https://github.com/apps/hashdrafts-service' target='_blank'><img
+            src='../../assets/GitHub_Logo.png'
+            alt='GitHub logo'
+            width='100'
+            height='40'
+            /></a>
+         <span class='integrationStatusLight'></span>
+         <span class='integrationStatusText'>Not connected</span>
+      </div>
+      {{/if}}
+      
+{{#if integrations.length}} 
+  {{!-- Needs Installation --}}
+   {{#if (needsIntegration 'hashnode' availableIntegrations)}}
+      <div class='integrationConnectList'>
+         <div class='integration'>
+            <img
+               src='../../assets/logo-standard.svg'
+               class='integrationIcon'
+               alt='Hashnode logo'
+               width='100'
+               height='40'
+               />
+            <span class='integrationStatusLight'></span>
+            <span class='integrationStatusText'>Not connected</span>
+         </div>
+      </div>
+   {{/if}}
+
+   {{#if (needsIntegration 'github' availableIntegrations)}}
+    <div class='integrationConnectList'>
+              <div class='integration' >
+         <a href='https://github.com/apps/hashdrafts-service' target='_blank'><img
+            src='../../assets/GitHub_Logo.png'
+            alt='GitHub logo'
+            width='100'
+            height='40'
+            /></a>
+         <span class='integrationStatusLight'></span>
+         <span class='integrationStatusText'>Not connected</span>
+      </div>
+    </div>
+   {{/if}}
+
+
+{{/if}}
+
+  </div>
+
+  {{! Hidden hashnode modal }}
+  <div id='hashnodeIntegrationModal'>
+    <form action='/integrations/configure' id='formContainer' method='post' autocomplete='off'>
+      <div id='inputWrapper'>
+        <label for='pat'>Enter your Hashnode Personal Access Token</label><br />
+        <input type='password' id='pat' name='personalAccessToken' required='true' />
+      </div>
+      <div id='inputWrapper'>
+        <input type='text' hidden='true' name='type' value='hashnode' />
+      </div>
+      <div id='buttonWrapper'>
+        <button type='submit'>Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

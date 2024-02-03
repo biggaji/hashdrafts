@@ -1,7 +1,6 @@
 export interface CreateDraftDto {
-  title: string;
   content: string;
-  userId: string;
+  title?: string;
 }
 
 export interface UpdateDraftDto extends Partial<CreateDraftDto> {}
