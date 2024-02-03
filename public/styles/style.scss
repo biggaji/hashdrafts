@@ -5,16 +5,32 @@
 *::before {
   padding: 0;
   margin: 0;
-  border: 0;
+  // border: 0;
   box-sizing: border-box;
 }
 
 body {
   width: 100%;
   font-family: 'Lato', sans-serif;
+  display: flex;
 }
 
-form {
+button,
+input[type='radio'],
+input[type='file'],
+select,
+option,
+label {
+  cursor: pointer;
+}
+
+main {
+  flex: 1;
+  margin-left: 0;
+  padding: 30px 20px;
+}
+
+#draftTextAreaForm {
   width: 60%;
   margin: 0 auto;
   padding: 10px 0;
@@ -33,5 +49,81 @@ form {
     display: inline-block;
     vertical-align: middle;
     margin-right: 0.5rem;
+  }
+}
+
+#sideNavContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  z-index: 100;
+  height: 100%;
+  background-color: #333;
+  padding: 1rem;
+  #navList {
+    ul {
+      list-style-type: none;
+      li {
+        margin: 0.5rem 0;
+        a {
+          color: #fff;
+          display: block;
+          text-decoration: none;
+          font-size: 1.2rem;
+          padding: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.showAside main {
+  margin-left: 200px;
+}
+
+#integrations {
+  .integrationConnectList {
+    margin: 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+    // border: 1px solid red;
+    a {
+      text-decoration: none;
+      display: inline-block;
+      margin: 0.1rem 0;
+      padding: 0.2rem 0;
+      img {
+        object-fit: contain;
+      }
+    }
+    .integration {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      img {
+      }
+
+      a {
+      }
+
+      .integrationStatusLight {
+        width: 10px;
+        height: 10px;
+        background-color: #ffbf00d8;
+        border-radius: 50%;
+        opacity: 0.7;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 5px;
+      }
+
+      .integrationStatusText {
+        margin-left: 5px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
   }
 }

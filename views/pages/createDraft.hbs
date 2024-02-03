@@ -2,17 +2,85 @@
   <h1>Create a new blog post draft.</h1>
 </div>
 <div id='formContainer'>
-  <form action='/auth/signup' id='authForm' method='post'>
+  {{#if draftMarkdown}}
+  <form action='/draft/save' id='draftForm' method='post' >
+  {{else}}
+  <form action='/draft' id='draftForm' method='post'  enctype="multipart/form-data" >
+  {{/if}}
+    {{! Title }}
+    {{! <div id='inputWrapper'>
+      <label for='draftTitle'>Title</label><br />
+      <input type='text' id='draftTitle' name='title' required='true' />
+    </div> }}
+
+    {{! Article type }}
     <div id='inputWrapper'>
-      <label for='fname'>Firstname</label><br />
-      <input type='text' id='fname' name='firstName' required='true' />
+      <label for='articleType'>What type of blog draft do you want to create?</label><br />
+      <input type='radio' id='technicalHowTo' name='articleType' value='technical how-to' checked='checked' />
+      <label for='technicalHowTo'>Technical how to</label><br />
+      <input type='radio' id='marketing' name='articleType' value='marketing' />
+      <label for='marketing'>Marketing</label>
     </div>
+
+    {{! Document source }}
     <div id='inputWrapper'>
-      <label for='lname'>Lastname</label><br />
-      <input type='text' id='lname' name='lastName' required='true' />
+      <label for='articleType'>Choose source to select document from.</label><br />
+      <input type='radio' id='localSource' name='source' value='local' checked='checked' />
+      <label for='localSource'>Local file</label><br />
+      {{#if hasGithubIntegrated}}
+        <input type='radio' id='githubSource' name='source' value='github' />
+        <label for='githubSource'>GitHub Repository</label><br>
+      {{/if}}
     </div>
+
+    <div id='inputWrapper'>
+      {{! Additional input for local file }}
+      {{! <label for='localFileInput'>Local File:</label> }}
+      <input type='file' id='localFileInput' name='document' />
+
+      {{! Additional input for GitHub file }}
+      {{!-- <label for='githubFileInput' style='display:none;'>GitHub Repository:</label><br>
+      <input type='text' id='githubFileInput' name='document' style='display:none;' /> --}}
+      <div id="repoList">
+      </div>
+      <div id="repoContentList"></div>
+    </div>
+
+{{#if draftMarkdown}}
+  </div id='inputWrapper'>
+    <textarea name='content' id='markdown-editor' cols='30' rows='10'></textarea>
+  <div>
+{{/if }}
+
+{{! <form action='/draft/publish' id="draftTextAreaForm" method='post'>
+  <div>
+    <input type='text' name='title' placeholder='Write title here' required='true' />
+    <input type='text' name='tags' placeholder='Add tags' , required='true' />
+  </div>
+  <div>
+    <button type='submit' id='publish-cta'><span id='logo-span'><img
+          src='../../assets/brand-icon-white.png'
+          width='20'
+          height='20'
+          alt='Hashnode brand icon'
+        /></span>Publish</button>
+  </div>
+</form> }}
+
+{{#if draftMarkdown}} 
+      <div id='buttonWrapper'>
+      <button type='submit'>Save draft</button>
+    </div>
+{{else}}
     <div id='buttonWrapper'>
-      <button type='submit'></button>
+      <button type='submit'>Generate draft</button>
     </div>
+{{/if}}
   </form>
 </div>
+
+{{#if draftMarkdown}}
+<script>
+  'use strict'; const simpleMDEditor = new SimpleMDE(); simpleMDEditor.value({{{draftMarkdown}}});
+</script>
+{{/if}}

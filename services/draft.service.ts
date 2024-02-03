@@ -45,8 +45,15 @@ export class DraftService {
     }
   }
 
-  async saveDraft(storeDraftDto: CreateDraftDto) {
+  async saveDraft(storeDraftDto: CreateDraftDto, userId: string) {
     try {
+      const { content, title } = storeDraftDto;
+
+      if (!content) {
+        throw new Error('Content is missing');
+      }
+
+      return await draftRepo.create({ content, ...(title && { title }) }, userId);
     } catch (error) {
       throw error;
     }
@@ -77,6 +84,7 @@ export class DraftService {
 
   async updateDraft(id: string, updateDraftDto: UpdateDraftDto) {
     try {
+      return await draftRepo.update(id, { ...updateDraftDto });
     } catch (error) {
       throw error;
     }

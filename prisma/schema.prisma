@@ -18,28 +18,38 @@ model User {
   password String
   email String @unique
   drafts Draft[]
-  HashnodesConfig HashnodeConfig?
+  Integration Integration[]
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
 
 model Draft {
   id String @id @default(uuid())
-  title String
+  title String?
   content String
+  tags String[]
   userId String
   user User @relation(fields: [userId], references: [id])
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
 
-// One to One Relationship
-model HashnodeConfig {
+model Integration {
   id String @id @default(uuid())
+  type IntegrationEnum @unique
   hostUrls String[]
-  personalAccessToken String
-  userId String @unique
+  publicationId String?
+  personalAccessToken String?
+  installationId Int?
+  isOrg Boolean @default(false)
+  connected Boolean @default(false)
+  userId String
   user User @relation(fields: [userId], references: [id])
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+}
+
+enum IntegrationEnum {
+  hashnode
+  github
 }

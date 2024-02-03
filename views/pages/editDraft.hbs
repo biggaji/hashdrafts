@@ -1,0 +1,23 @@
+<form action='/draft/{{draft.id}}' id='draftTextAreaForm' method="post">
+  {{! <div>
+    <input type='text' name='title' placeholder='Write title here' required='true' />
+    <input type='text' name='tags' placeholder='Add tags' , required='true' />
+  </div> }}
+   </div id='inputWrapper'>
+    <textarea name='content' id='markdown-editor' cols='30' rows='10'></textarea>
+  <div> 
+  <div>
+    {{! <button type='submit' id='publish-cta'><span id='logo-span'><img
+          src='../../assets/brand-icon-white.png'
+          width='20'
+          height='20'
+          alt='Hashnode brand icon'
+        /></span>Update</button> }}
+
+    <button type='submit'>Save changes</button>
+  </div>
+</form>
+
+<script>
+  'use strict'; const simpleMDEditor = new SimpleMDE(); simpleMDEditor.value({{{draftMarkdown}}});
+</script>

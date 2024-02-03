@@ -9,6 +9,8 @@ import { draftRouter } from './routers/draft.router.js';
 import { githubRouter } from './routers/github.router.js';
 import { indexRouter } from './routers/indexRouter.js';
 import cookieParser from 'cookie-parser';
+import { integrationRouter } from './routers/integration.router.js';
+import Handlebars from 'handlebars';
 
 // Load environment variables
 config();
@@ -25,6 +27,23 @@ app.use(cookieParser());
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 
 // View engine setup
+Handlebars.registerHelper('eq', function (value1, value2) {
+  return value1 === value2;
+});
+
+Handlebars.registerHelper('needsIntegration', function (type, availableIntegrations) {
+  try {
+    let needsIntegration = true;
+    if (availableIntegrations.includes(type)) {
+      needsIntegration = false;
+    }
+    return needsIntegration;
+  } catch (error) {
+    console.error('Error checking integration existence:', error);
+    return true; // Assuming integration check failure means integration is needed
+  }
+});
+
 app.engine('hbs', engine({ extname: 'hbs' }));
 app.set('view engine', 'hbs');
 
@@ -32,6 +51,7 @@ app.set('view engine', 'hbs');
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/draft', draftRouter);
+app.use('/integrations', integrationRouter);
 app.use('/github', githubRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {

@@ -8,7 +8,7 @@ config();
 
 export async function localAuthGuard(req: Request, res: Response, next: NextFunction) {
   try {
-    const token = req.cookies['x-token'];
+    const token = req.cookies['x-token'] || req.headers.authorization;
 
     if (!token) {
       throw new Error('Login to continue');

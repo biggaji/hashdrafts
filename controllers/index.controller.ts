@@ -8,6 +8,7 @@ export const dashboardController = async (req: Request, res: Response, next: Nex
       actor: user.firstName,
       pageUrl: `${pageUrlPrefix}/dashboard`,
       pageTitle: `Hashdrafts - Dashboard`,
+      showAside: true,
     });
   } catch (error) {
     next(error);
@@ -76,6 +77,7 @@ export const indexController = async (req: Request, res: Response, next: NextFun
       pageTitle: 'Hashdrafts - Generate article drafts for Hashnode',
       pageUrl: pageUrlPrefix,
       draft: JSON.stringify(draft),
+      showAside: false,
     });
   } catch (error) {
     next(error);
